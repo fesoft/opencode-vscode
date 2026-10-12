@@ -69,6 +69,23 @@ Para desinstalar:
 code --uninstall-extension fernando.opencode-vscode
 ```
 
+## Publicar no VS Code Marketplace
+
+1. Crie um publisher em <https://marketplace.visualstudio.com/manage> e gere um
+   Personal Access Token (PAT) no Azure DevOps com escopo **Marketplace → Manage**.
+2. Publique localmente:
+
+   ```bash
+   npx vsce login fernando
+   npm run publish:marketplace
+   ```
+
+3. Ou use o workflow `Publish Extension` em `.github/workflows/publish.yml`
+   (dispara ao enviar uma tag `v*`). Configure o secret `VSCE_PAT` no repositório
+   e, opcionalmente, `OVSX_PAT` para publicar também no Open VSX.
+
+Repositório: <https://github.com/fesoft/opencode-vscode>
+
 ## Requisitos
 
 - VS Code 1.136+.
