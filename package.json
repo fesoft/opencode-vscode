@@ -5,6 +5,14 @@
   "version": "0.1.0",
   "publisher": "fernando",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fesoft/opencode-vscode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fesoft/opencode-vscode/issues"
+  },
+  "homepage": "https://github.com/fesoft/opencode-vscode#readme",
   "engines": {
     "vscode": "^1.136.0"
   },
@@ -145,7 +153,8 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "package": "vsce package",
-    "install:vsix": "code --install-extension opencode-vscode-0.1.0.vsix --force"
+    "install:vsix": "code --install-extension opencode-vscode-0.1.0.vsix --force",
+    "publish:marketplace": "vsce publish"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",

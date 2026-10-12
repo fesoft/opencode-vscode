@@ -1,0 +1,34 @@
+name: Publish Extension
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # Requires the `VSCE_PAT` repository secret.
+      # See: https://code.visualstudio.com/api/working-with-extensions/publishing-extension
+      - name: Publish to Visual Studio Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: npx @vscode/vsce publish --no-dependencies -p "$VSCE_PAT"
+
+      # Optional second registry. Requires the `OVSX_PAT` repository secret.
+      - name: Publish to Open VSX
+        continue-on-error: true
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: npx ovsx publish -p "$OVSX_PAT"
