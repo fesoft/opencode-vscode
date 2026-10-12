@@ -1,0 +1,156 @@
+{
+  "name": "opencode-vscode",
+  "displayName": "OpenCode V2",
+  "description": "Abre o OpenCode v2 no terminal integrado do VS Code, com detecção de instalação e configurações.",
+  "version": "0.1.0",
+  "publisher": "fernando",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.136.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "opencode",
+    "ai",
+    "agent",
+    "terminal",
+    "tui"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "opencode.open",
+        "title": "OpenCode: Abrir",
+        "category": "OpenCode",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "opencode.openStandalone",
+        "title": "OpenCode: Abrir (servidor privado / --standalone)",
+        "category": "OpenCode"
+      },
+      {
+        "command": "opencode.mini",
+        "title": "OpenCode: Abrir interface Mini",
+        "category": "OpenCode"
+      },
+      {
+        "command": "opencode.continue",
+        "title": "OpenCode: Continuar última sessão",
+        "category": "OpenCode"
+      },
+      {
+        "command": "opencode.runPrompt",
+        "title": "OpenCode: Executar prompt (run)",
+        "category": "OpenCode",
+        "icon": "$(play)"
+      },
+      {
+        "command": "opencode.checkInstallation",
+        "title": "OpenCode: Verificar instalação",
+        "category": "OpenCode"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "opencode.open",
+        "key": "ctrl+alt+o",
+        "mac": "cmd+alt+o"
+      },
+      {
+        "command": "opencode.runPrompt",
+        "key": "ctrl+alt+shift+o",
+        "mac": "cmd+alt+shift+o"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "opencode.open",
+          "when": "resourceScheme == file",
+          "group": "navigation@1"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "opencode.open",
+          "when": "resourceScheme == file",
+          "group": "navigation@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "opencode.open",
+          "when": "true"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "OpenCode",
+      "properties": {
+        "opencode.binaryPath": {
+          "type": "string",
+          "default": "opencode",
+          "description": "Caminho ou comando do binário do OpenCode. Use o nome \"opencode\" para procurar no PATH, ou um caminho absoluto."
+        },
+        "opencode.standalone": {
+          "type": "boolean",
+          "default": false,
+          "description": "Iniciar com um servidor privado (--standalone) em vez do serviço em segundo plano compartilhado."
+        },
+        "opencode.extraArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Argumentos extras adicionados a todos os comandos de abertura. Ex.: [\"--log-level\", \"debug\"]."
+        },
+        "opencode.workingDirectory": {
+          "type": "string",
+          "default": "",
+          "description": "Diretório de trabalho do terminal. Se vazio, usa a primeira pasta do workspace."
+        },
+        "opencode.terminalName": {
+          "type": "string",
+          "default": "OpenCode",
+          "description": "Nome do terminal integrado criado pela extensão."
+        },
+        "opencode.reuseTerminal": {
+          "type": "boolean",
+          "default": true,
+          "description": "Reutilizar o terminal já aberto com o mesmo nome em vez de criar um novo a cada comando."
+        },
+        "opencode.autoDetect": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detectar automaticamente se o OpenCode está instalado e atualizar o item da barra de status."
+        },
+        "opencode.showStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mostrar um item na barra de status para abrir o OpenCode com um clique."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package",
+    "install:vsix": "code --install-extension opencode-vscode-0.1.0.vsix --force"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/vscode": "^1.136.0",
+    "@vscode/vsce": "^4.0.0",
+    "typescript": "^7.0.2"
+  }
+}
