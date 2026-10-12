@@ -19,16 +19,32 @@ jobs:
 
       - run: npm ci
 
+      # The `secrets` context is not available in `if`, so expose the presence
+      # of the token as a step output and gate the publish steps on it.
+      - name: Check publish tokens
+        id: tokens
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: |
+          echo "vsce=$([ -n "$VSCE_PAT" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "ovsx=$([ -n "$OVSX_PAT" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
       # Requires the `VSCE_PAT` repository secret.
       # See: https://code.visualstudio.com/api/working-with-extensions/publishing-extension
       - name: Publish to Visual Studio Marketplace
+        if: steps.tokens.outputs.vsce == 'true'
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: npx @vscode/vsce publish --no-dependencies -p "$VSCE_PAT"
 
+      - name: Skip notice
+        if: steps.tokens.outputs.vsce != 'true'
+        run: echo "::warning::VSCE_PAT não configurado; publicação no Marketplace foi ignorada."
+
       # Optional second registry. Requires the `OVSX_PAT` repository secret.
       - name: Publish to Open VSX
-        continue-on-error: true
+        if: steps.tokens.outputs.ovsx == 'true'
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
         run: npx ovsx publish -p "$OVSX_PAT"
